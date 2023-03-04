@@ -1,7 +1,7 @@
-GebImage
+NScript 图像库
 ========
 
-本项目已迁移为 [NScript.Image](https://github.com/nscript-site/NScript.Image)。
+本项目初始为 [GebImage](https://github.com/xiaotie/GebImage), 已迁移为 [NScript.Image](https://github.com/nscript-site/NScript.Image)。
 
 ## 简介
 
@@ -62,11 +62,11 @@ var im2 = ImageBgra32.Read(@"./img/demo-bmp-24.bmp");
 
 ## 图像处理
 
-代写
+待写
 
 ## Blob 分析
 
-代写
+待写
 
 ## 深度学习相关图像处理方法
 
