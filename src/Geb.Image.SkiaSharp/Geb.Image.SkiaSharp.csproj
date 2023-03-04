@@ -10,6 +10,7 @@
     <BaseOutputPath>..\..\bin\</BaseOutputPath>
     <AssemblyName>Geb.Image.Skia</AssemblyName>
     <GenerateDocumentationFile>True</GenerateDocumentationFile>
+    <RootNamespace>Geb.Image.Skia</RootNamespace>
   </PropertyGroup>
 
   <ItemGroup>

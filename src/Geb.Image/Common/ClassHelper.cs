@@ -104,50 +104,6 @@ namespace Geb.Image
             return result;
         }
 
-        /// <summary>
-        /// 转换为指定格式的 Bitmap 
-        /// </summary>
-        /// <param name="bmp">Bitmap对象</param>
-        /// <param name="dstFormat">指定的PixelFormat</param>
-        /// <returns>新的指定格式的Bitmap</returns>
-        public static Bitmap ToBitmap(this Bitmap bmp, System.Drawing.Imaging.PixelFormat dstFormat, DisposePolicy disposePolicy = DisposePolicy.None)
-        {
-            var format = bmp.PixelFormat;
-            Bitmap newMap = null;
-
-            const int PixelFormat32bppCMYK = 8207;
-            if ((int)format == PixelFormat32bppCMYK)
-            {
-                format = System.Drawing.Imaging.PixelFormat.Format24bppRgb;
-                newMap = new Bitmap(bmp.Width, bmp.Height, format);
-                using (Graphics g = Graphics.FromImage(newMap))
-                {
-                    g.DrawImage(bmp, new System.Drawing.Point());
-                }
-            }
-            else
-            {
-                format = System.Drawing.Imaging.PixelFormat.Format32bppArgb;
-                newMap = bmp.Clone(new Rectangle(0, 0, bmp.Width, bmp.Height), dstFormat);
-            }
-
-            if (disposePolicy == DisposePolicy.DisposeCaller) bmp.Dispose();
-            return newMap;
-        }
-
-        /// <summary>
-        /// 将Bitmap图像转换成 ImageBgra32 图像
-        /// </summary>
-        /// <param name="bmp">Bitmap 图像</param>
-        /// <param name="disposePolicy">转换完毕后的Dispose策略，默认为DisposePolicy.None</param>
-        /// <returns>ImageBgra32 图像</returns>
-        public static ImageBgra32 ToImageBgra32(this Bitmap bmp, DisposePolicy disposePolicy = DisposePolicy.None)
-        {
-            ImageBgra32 img = new ImageBgra32(bmp);
-            if (disposePolicy == DisposePolicy.DisposeCaller) bmp.Dispose();
-            return img;
-        }
-
         #endregion
 
         public static System.Drawing.Imaging.PixelFormat ToSystemDrawingPixelFormat(this Geb.Image.PixelFormat fmt)

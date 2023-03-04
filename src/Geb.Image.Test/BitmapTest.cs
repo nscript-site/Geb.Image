@@ -7,6 +7,15 @@ namespace Geb.Image.Test
     public class BitmapTest
     {
         [TestMethod]
+        public void TestRead()
+        {
+            var im = ImageReader.Read(@"./img/demo-bmp-24.bmp");
+            var im2 = ImageBgra32.Read(@"./img/demo-bmp-24.bmp");
+            Assert.AreEqual(120, im.Width);
+            Assert.AreEqual(120, im2.Width);
+        }
+
+        [TestMethod]
         public void TestDecode()
         {
             string path = @"./img/demo-bmp-24.bmp";

@@ -10,7 +10,7 @@ namespace Geb.Image
         int Width { get; }
         int Height { get; }
         int BytesPerPixel { get; }
-        Bitmap ToBitmap();
         unsafe void CopyFrom(void* pData, int dataStride);
+        unsafe void CopyTo(void* pData, int dataStride);
     }
 }

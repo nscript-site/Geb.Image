@@ -72,7 +72,12 @@ namespace Geb.Image
         public static ImageBgra32 Read(String filePath)
         {
             if(File.Exists(filePath) == false) throw new FileNotFoundException("File Not Exist", filePath);
-            return ImageReader.Instance.Read(filePath);
+            return ImageReader.Read(filePath);
+        }
+
+        public static ImageBgra32 ReadStream(Stream stream)
+        {
+            return ImageReader.Read(stream);
         }
 
         public ImageU8 ToGrayscaleImage()

@@ -110,6 +110,11 @@ namespace Geb.Image.Analysis
             }
         }
 
+        /// <summary>
+        /// 创建凸包
+        /// </summary>
+        /// <param name="pts"></param>
+        /// <returns></returns>
         public static List<PointF> CreateConvexHull(IList<PointF> pts)
         {
             return GrahamScan.ConvexHull(pts);

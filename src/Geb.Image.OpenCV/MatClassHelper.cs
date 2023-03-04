@@ -19,6 +19,12 @@ namespace Geb.Image
             return mat;
         }
 
+        public unsafe static Mat ToCVMat(this ImageBgra32 img)
+        {
+            Mat mat = new Mat(img.Height, img.Width, MatType.CV_8UC4, img.StartIntPtr, img.Stride);
+            return mat;
+        }
+
         public unsafe static ImageU8 ToImageU8(this Mat mat)
         {
             if (mat == null) return null;

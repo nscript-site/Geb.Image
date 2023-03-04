@@ -419,14 +419,6 @@ namespace Geb.Image
             }
         }
 
-        public void Save(String path)
-        {
-            using (Bitmap bmp = this.ToBitmap())
-            {
-                bmp.Save(path);
-            }
-        }
-
         /// <summary>
         /// 创建图像。
         /// </summary>
@@ -500,22 +492,6 @@ namespace Geb.Image
             //Console.WriteLine("Thread " + System.Threading.Thread.CurrentThread.ManagedThreadId + " Alloc Memory:" + StartIntPtr);
         }
 
-        public unsafe ImageSBgra64(String path)
-        {
-            using (Bitmap bmp = new Bitmap(path))
-            {
-                AllocMemory(bmp.Width, bmp.Height);
-                this.CreateFromBitmap(bmp);
-            }
-        }
-
-        public ImageSBgra64(Bitmap map)
-        {
-            if (map == null) throw new ArgumentNullException("map");
-            AllocMemory(map.Width, map.Height);
-            this.CreateFromBitmap(map);
-        }
-
         public unsafe virtual void Dispose()
         {
             if (_isOwner == true)
@@ -543,162 +519,6 @@ namespace Geb.Image
         {
             return Marshal.SizeOf(typeof(TPixel));
         }
-
-        #region Bitmap 操作
-
-        /// <summary>
-        /// 从 Bitmap 中复制数据。仅支持 windows 
-        /// </summary>
-        /// <param name="map"></param>
-        /// <exception cref="ArgumentException"></exception>
-        public void CloneFrom(Bitmap map)
-        {
-            if (map.Width != this.Width || map.Height != this.Height)
-                throw new ArgumentException("Bitmap must be same size.");
-
-            this.CreateFromBitmap(map);
-        }
-
-        /// <summary>
-        /// 从 Bitmap 中复制数据。仅支持 windows 
-        /// </summary>
-        /// <param name="map"></param>
-        protected virtual unsafe void CreateFromBitmap(Bitmap map)
-        {
-            int height = map.Height;
-            int width = map.Width;
-
-            const int PixelFormat32bppCMYK = 8207;
-
-            System.Drawing.Imaging.PixelFormat format = map.PixelFormat;
-
-            this.Width = width;
-            this.Height = height;
-
-            Bitmap newMap = map;
-            Int32 step = SizeOfType;
-
-            switch (format)
-            {
-                case System.Drawing.Imaging.PixelFormat.Format24bppRgb:
-                    break;
-                case System.Drawing.Imaging.PixelFormat.Format32bppArgb:
-                    break;
-                default:
-                    if ((int)format == PixelFormat32bppCMYK)
-                    {
-                        format = System.Drawing.Imaging.PixelFormat.Format24bppRgb;
-                        newMap = new Bitmap(width, height, format);
-                        using (Graphics g = Graphics.FromImage(newMap))
-                        {
-                            g.DrawImage(map, new System.Drawing.Point());
-                        }
-                    }
-                    else
-                    {
-                        format = System.Drawing.Imaging.PixelFormat.Format32bppArgb;
-                        newMap = map.Clone(new Rectangle(0, 0, width, height), System.Drawing.Imaging.PixelFormat.Format32bppArgb);
-                    }
-                    break;
-            }
-
-            BitmapData data = newMap.LockBits(new Rectangle(0, 0, width, height), ImageLockMode.ReadOnly, format);
-            Byte* line = (Byte*)data.Scan0;
-            Byte* dstLine = (Byte*)Start;
-            try
-            {
-                if (format == System.Drawing.Imaging.PixelFormat.Format24bppRgb)
-                {
-                    for (int h = 0; h < height; h++)
-                    {
-                        Copy((Bgr24*)line, (void*)dstLine, width);
-                        line += data.Stride;
-                        dstLine += step * width;
-                    }
-                }
-                else
-                {
-                    for (int h = 0; h < height; h++)
-                    {
-                        Copy((Bgra32*)line, (void*)dstLine, width);
-
-                        line += data.Stride;
-                        dstLine += step * width;
-                    }
-                }
-            }
-            catch (Exception)
-            {
-                throw;
-            }
-            finally
-            {
-                newMap.UnlockBits(data);
-                if (newMap != map)
-                {
-                    newMap.Dispose();
-                }
-            }
-        }
-
-        /// <summary>
-        /// 转换成 Bitmap。仅支持 windows 
-        /// </summary>
-        /// <returns></returns>
-        public virtual unsafe Bitmap ToBitmap()
-        {
-            Bitmap map = new Bitmap(this.Width, this.Height, GetOutputBitmapPixelFormat().ToSystemDrawingPixelFormat());
-            ToBitmap(map);
-            return map;
-        }
-
-        /// <summary>
-        /// 转换成  Bitmap。仅支持 windows 
-        /// </summary>
-        /// <param name="map"></param>
-        /// <exception cref="ArgumentNullException"></exception>
-        /// <exception cref="ArgumentException"></exception>
-        public virtual unsafe void ToBitmap(Bitmap map)
-        {
-            if (map == null) throw new ArgumentNullException("map");
-            if (map.Width != this.Width || map.Height != this.Height)
-            {
-                throw new ArgumentException("尺寸不匹配.");
-            }
-
-            if (map.PixelFormat != GetOutputBitmapPixelFormat().ToSystemDrawingPixelFormat())
-            {
-                throw new ArgumentException("只支持 " + GetOutputBitmapPixelFormat().ToString() + " 格式。 ");
-            }
-
-            if (map.PixelFormat == System.Drawing.Imaging.PixelFormat.Format8bppIndexed)
-            {
-                map.InitGrayscalePalette();
-            }
-
-            Int32 step = SizeOfType;
-            Byte* srcLine = (Byte*)Start;
-
-            BitmapData data = map.LockBits(new Rectangle(0, 0, map.Width, map.Height), ImageLockMode.ReadWrite, map.PixelFormat);
-            try
-            {
-                int width = map.Width;
-                int height = map.Height;
-                Byte* dstLine = (Byte*)data.Scan0;
-                for (int h = 0; h < height; h++)
-                {
-                    ToBitmapCore(srcLine, dstLine, width);
-                    dstLine += data.Stride;
-                    srcLine += Stride;
-                }
-            }
-            finally
-            {
-                map.UnlockBits(data);
-            }
-        }
-
-        #endregion
 
         public void ApplyMatrix(float a, float b, float c, float d, float e, float f)
         {
@@ -1897,6 +1717,26 @@ namespace Geb.Image
                 spanSrc.CopyTo(spanDst);
                 pSrc0 += dataStride;
                 pDst0 += this.Stride;
+            }
+        }
+
+        /// <summary>
+        /// 将数据复制到外部。数据的 width 和 height 应该和图像的 width 和 height 一致。
+        /// </summary>
+        /// <param name="pData"></param>
+        /// <param name="dataStride">外部数据的 stride </param>
+        public unsafe void CopyTo(void* pData, int dataStride)
+        {
+            Byte* pSrc0 = (Byte*)this.Start;
+            Byte* pDst0 = (Byte*)pData;
+            int rowBytes = this.Width * this.SizeOfType;
+            for (int i = 0; i < this.Height; i++)
+            {
+                Span<Byte> spanSrc = new Span<Byte>(pSrc0, rowBytes);
+                Span<Byte> spanDst = new Span<Byte>(pDst0, rowBytes);
+                spanSrc.CopyTo(spanDst);
+                pSrc0 += this.Stride;
+                pDst0 += dataStride;
             }
         }
 
