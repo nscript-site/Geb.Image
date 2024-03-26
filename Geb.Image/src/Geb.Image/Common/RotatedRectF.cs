@@ -32,18 +32,18 @@ namespace Geb.Image
         /// <returns></returns>
         public readonly PointF[] Points()
         {
-            double num = (double)Angle * Math.PI / 180.0;
-            float num2 = (float)Math.Cos(num) * 0.5f;
-            float num3 = (float)Math.Sin(num) * 0.5f;
+            double radius = (double)Angle * Math.PI / 180.0;
+            float cos = (float)Math.Cos(radius) * 0.5f;
+            float sin = (float)Math.Sin(radius) * 0.5f;
             PointF[] array = new PointF[4];
-            array[0].X = Center.X - num3 * Size.Height - num2 * Size.Width;
-            array[0].Y = Center.Y + num2 * Size.Height - num3 * Size.Width;
-            array[1].X = Center.X + num3 * Size.Height - num2 * Size.Width;
-            array[1].Y = Center.Y - num2 * Size.Height - num3 * Size.Width;
+            array[3].X = Center.X - sin * Size.Height - cos * Size.Width;
+            array[3].Y = Center.Y + cos * Size.Height - sin * Size.Width;
+            array[0].X = Center.X + sin * Size.Height - cos * Size.Width;
+            array[0].Y = Center.Y - cos * Size.Height - sin * Size.Width;
+            array[1].X = 2f * Center.X - array[3].X;
+            array[1].Y = 2f * Center.Y - array[3].Y;
             array[2].X = 2f * Center.X - array[0].X;
             array[2].Y = 2f * Center.Y - array[0].Y;
-            array[3].X = 2f * Center.X - array[1].X;
-            array[3].Y = 2f * Center.Y - array[1].Y;
             return array;
         }
 

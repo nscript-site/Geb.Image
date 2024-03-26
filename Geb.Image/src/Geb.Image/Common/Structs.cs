@@ -734,7 +734,7 @@ namespace Geb.Image
             float x2 = Math.Min(this.Right, r.Right);
             float y1 = Math.Max(this.Top, r.Top);
             float y2 = Math.Min(this.Bottom, r.Bottom);
-            if (x1 <= x2 || y1 <= y2) return new RectF();
+            if (x1 >= x2 || y1 >= y2) return new RectF();
             else return new RectF(x1, y1, x2 - x1,y2 - y1);
         }
 

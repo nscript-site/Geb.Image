@@ -734,6 +734,10 @@ namespace Geb.Image.Hidden
             TChannel* sLine0 = null;
             TChannel* sLine1 = null;
 
+            // float 的精度为 7 位，所以在图像小于 100000 像素时，这里的 0.01f 是安全的。图像太大的话，这里会出错
+            float wMax = rect.Width - 1 - 0.01f;
+            float hMax = rect.Height - 1 - 0.01f;
+
             for (int n = 0; n < nChannel; n++)
             {
                 TChannel* s0 = rootSrc + n;
@@ -753,11 +757,9 @@ namespace Geb.Image.Hidden
                         xAlpha = p.X - (int)p.X; xBeta = 1 - xAlpha;
                         yAlpha = p.Y - (int)p.Y; yBeta = 1 - yAlpha;
 
-                        // 避免指针越界
-                        p.X = Math.Min(rect.Width - 1 - 0.00001f, p.X);
-                        p.Y = Math.Min(rect.Height - 1 - 0.00001f, p.Y);
-
-                        //this[h, w] = src[(int)p.Y, (int)p.X];
+                        // 避免指针越界。
+                        p.X = Math.Min(wMax, p.X);
+                        p.Y = Math.Min(hMax, p.Y);
 
                         sLine0 = s0 + src.Stride * (int)p.Y + nChannel * (int)p.X;
                         sLine1 = sLine0 + src.Stride;
