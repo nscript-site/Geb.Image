@@ -7,13 +7,13 @@ public static class ImageTransform
     public unsafe static float[] NormalizeToFloatByMeanAndStd(this ImageBgr24 imgSource, bool cvtToRgb, ValueTuple<float,float,float> mean, ValueTuple<float,float,float> std)
     {
         Span<float> meanSpan = stackalloc float[3];
-        meanSpan[0] = mean.Item1;
-        meanSpan[1] = mean.Item2;
-        meanSpan[2] = mean.Item3;
+        meanSpan[0] = mean.Item1 * 255;
+        meanSpan[1] = mean.Item2 * 255;
+        meanSpan[2] = mean.Item3 * 255;
         Span<float> scaleSpan = stackalloc float[3];
-        scaleSpan[0] = 1.0f / std.Item1;
-        scaleSpan[1] = 1.0f / std.Item2;
-        scaleSpan[2] = 1.0f / std.Item3;
+        scaleSpan[0] = 1.0f / 255.0f / std.Item1;
+        scaleSpan[1] = 1.0f / 255.0f / std.Item2;
+        scaleSpan[2] = 1.0f / 255.0f / std.Item3;
 
         float[] buff = new float[imgSource.Width * imgSource.Height * 3];
         fixed (float* pBuff = buff)
@@ -27,13 +27,13 @@ public static class ImageTransform
     public unsafe static float[] NormalizeToFloatByMeanAndStd(this ImageBgr24[] imgSources, bool cvtToRgb, ValueTuple<float, float, float> mean, ValueTuple<float, float, float> std)
     {
         Span<float> meanSpan = stackalloc float[3];
-        meanSpan[0] = mean.Item1;
-        meanSpan[1] = mean.Item2;
-        meanSpan[2] = mean.Item3;
+        meanSpan[0] = mean.Item1 * 255;
+        meanSpan[1] = mean.Item2 * 255;
+        meanSpan[2] = mean.Item3 * 255;
         Span<float> scaleSpan = stackalloc float[3];
-        scaleSpan[0] = 1.0f / std.Item1;
-        scaleSpan[1] = 1.0f / std.Item2;
-        scaleSpan[2] = 1.0f / std.Item3;
+        scaleSpan[0] = 1.0f / 255.0f / std.Item1;
+        scaleSpan[1] = 1.0f / 255.0f / std.Item2;
+        scaleSpan[2] = 1.0f / 255.0f / std.Item3;
 
         var imgSource = imgSources[0];
         float[] buff = new float[imgSource.Width * imgSource.Height * 3 * imgSources.Length];
@@ -55,13 +55,13 @@ public static class ImageTransform
         ValueTuple<int, int, int> paddingRights, ValueTuple<int, int, int> paddingBottoms)
     {
         Span<float> meanSpan = stackalloc float[3];
-        meanSpan[0] = mean.Item1;
-        meanSpan[1] = mean.Item2;
-        meanSpan[2] = mean.Item3;
+        meanSpan[0] = mean.Item1 * 255;
+        meanSpan[1] = mean.Item2 * 255;
+        meanSpan[2] = mean.Item3 * 255;
         Span<float> scaleSpan = stackalloc float[3];
-        scaleSpan[0] = 1.0f / std.Item1;
-        scaleSpan[1] = 1.0f / std.Item2;
-        scaleSpan[2] = 1.0f / std.Item3;
+        scaleSpan[0] = 1.0f / 255.0f / std.Item1;
+        scaleSpan[1] = 1.0f / 255.0f / std.Item2;
+        scaleSpan[2] = 1.0f / 255.0f / std.Item3;
         Span<int> paddingRightsSpan = stackalloc int[3];
         paddingRightsSpan[0] = paddingRights.Item1;
         paddingRightsSpan[1] = paddingRights.Item2;
@@ -108,9 +108,9 @@ public static class ImageTransform
                 {
                     Bgr24 c = pSrc[w];
                     // val = (val - mean) * scale;
-                    pChannel0[w] = (c.Red - means[2]) * scales[2];
+                    pChannel0[w] = (c.Red - means[0]) * scales[0];
                     pChannel1[w] = (c.Green - means[1]) * scales[1];
-                    pChannel2[w] = (c.Blue - means[0]) * scales[0];
+                    pChannel2[w] = (c.Blue - means[2]) * scales[2];
                 }
 
                 pSrc += imgSource.Width;

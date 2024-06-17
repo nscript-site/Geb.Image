@@ -18,6 +18,14 @@
             }
         }
 
+        public static unsafe ImageBgr24? ReadBgr24(String imageFilePath)
+        {
+            using (var bmp = Read(imageFilePath))
+            {
+                return bmp?.ToImageBgr24() ?? null;
+            }
+        }
+
         public static unsafe ImageU8? ReadU8(String imageFilePath)
         {
             using (var bmp = Read(imageFilePath))
@@ -31,6 +39,14 @@
             using (var bmp = Read(stream))
             {
                 return bmp?.ToImageBgra32() ?? null;
+            }
+        }
+
+        public static unsafe ImageBgr24? ReadBgr24(Stream stream)
+        {
+            using (var bmp = Read(stream))
+            {
+                return bmp?.ToImageBgr24() ?? null;
             }
         }
 
@@ -134,6 +150,35 @@
             ImageBgra32 image = new ImageBgra32(bitmap.Width, bitmap.Height);
             void* Data = (void*)cvtBmp.GetPixels();
             image.CopyFrom(Data, cvtBmp.RowBytes);
+            if (cvtBmp != bitmap) cvtBmp.Dispose();
+            return image;
+        }
+
+        /// <summary>
+        /// 转换为 ImageBgr24
+        /// </summary>
+        /// <param name="bitmap"></param>
+        /// <returns></returns>
+        public static unsafe ImageBgr24 ToImageBgr24(this SKBitmap bitmap)
+        {
+            var cvtBmp = CheckOrConvertTo(bitmap, SKColorType.Bgra8888, SKAlphaType.Unpremul);
+            if (cvtBmp == null) return null;
+
+            ImageBgr24 image = new ImageBgr24(bitmap.Width, bitmap.Height);
+            byte* Data = (byte*)cvtBmp.GetPixels();
+            Bgr24* pDst0 = image.Start;
+            for(int h = 0; h < image.Height; h++)
+            {
+                byte* pByte = Data + h * cvtBmp.RowBytes;
+                Bgr24* pBgr24 = pDst0 + h * image.Width;
+                Bgr24* pBgr24End = pBgr24 + image.Width;
+                while(pBgr24 < pBgr24End)
+                {
+                    *pBgr24 = *(Bgr24*)pByte;
+                    pByte+=4;
+                    pBgr24++;
+                }
+            }
             if (cvtBmp != bitmap) cvtBmp.Dispose();
             return image;
         }

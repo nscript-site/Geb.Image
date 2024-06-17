@@ -2,9 +2,10 @@
 <package xmlns="http://schemas.microsoft.com/packaging/2010/07/nuspec.xsd">
     <metadata>
         <id>Geb.Image</id>
-        <version>6.0.10</version>
+        <version>6.1.0</version>
         <title>Geb Image Library</title>
         <authors>hufei(geblab)</authors>
+        <readme>docs\README.md</readme>
         <licenseUrl>http://opensource.org/licenses/MS-PL</licenseUrl>
         <projectUrl>https://github.com/nscript-site/NScript.Image</projectUrl>
         <iconUrl>http://www.geblab.com/Content/images/logo.png</iconUrl>
@@ -16,6 +17,7 @@
 		</dependencies>
     </metadata>
     <files>
+        <file src="..\..\README.md" target="docs\" />
         <file src="..\bin\Release\net6.0\Geb.Image.dll" target="lib\net6.0" />
         <file src="..\bin\Release\net6.0\Geb.Image.xml" target="lib\net6.0" />
         <file src="..\bin\Release\net6.0\Geb.Image.pdb" target="lib\net6.0" />

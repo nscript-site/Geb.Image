@@ -1,4 +1,6 @@
-﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
+﻿using Geb.Image.Transforms;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
+using System;
 using System.IO;
 
 namespace Geb.Image.Test;
@@ -58,5 +60,14 @@ public class ImageTest
         RotatedRectF rect = new RotatedRectF(new PointF(1043.05322f, 1003.94385f), new SizeF(717.3058f, 1332.83447f), -3.65722656f);
         var imgClip = image[rect];
         Assert.IsTrue(imgClip.Width > 0);
+    }
+
+    [TestMethod]
+    public void TestTransforms()
+    {
+        var image = new ImageBgr24(224,224);
+        image.Fill(Bgr24.WHITE);
+        var data = image.NormalizeToFloatByMeanAndStd(true, (0.48145466f, 0.4578275f, 0.40821073f), (0.26862954f, 0.26130258f, 0.27577711f));
+        Assert.IsTrue(Math.Abs(data[0]-1.9303) < 0.01);
     }
 }

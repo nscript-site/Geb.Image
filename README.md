@@ -50,7 +50,7 @@ var im2 = ImageBgra32.Read(@"./img/demo-bmp-24.bmp");
 
 ### 通过 Geb.Image.Skia 库进行读写
 
-可通过 ImageIO 类进行图像读写。ImageIO.Read 方法，直接将文件或流读取为 SKBitmap 文件。ImageIO.ReadBgra32 和 ImageIO.ReadU8 方法，直接将文件或流读取为 ImageBgra32 或 ImageU8 文件。
+可通过 ImageIO 类进行图像读写。ImageIO.Read 方法，直接将文件或流读取为 SKBitmap 文件。ImageIO.ReadBgra32, ImageIO.ReadU8, ImageIO.ReadBgr24 方法，直接将文件或流读取为 ImageBgra32、ImageU8 或 ImageBgr24 等文件。
 
 ## 图像操作
 
@@ -93,3 +93,16 @@ var image = new ImageBgr24(1728, 1296);
 RotatedRectF rect = new RotatedRectF(new PointF(1043.05322f, 1003.94385f), new SizeF(717.3058f, 1332.83447f), -3.65722656f);
 var imgClip = image[rect];
 ```
+
+### 根据 mean 和 std，将图像数据归一化
+
+将 ImageBgr24 的图像，先转换为 rgb 格式，再使用 mean 和 std 来进行归一化：
+
+```csharp
+using Geb.Image.Transforms;
+...
+bool cvtToRgb = true; //是否需要转换为 rgb 格式
+float[] data = image.NormalizeToFloatByMeanAndStd(cvtToRgb, (0.48145466f, 0.4578275f, 0.40821073f), (0.26862954f, 0.26130258f, 0.27577711f));
+...
+```
+
