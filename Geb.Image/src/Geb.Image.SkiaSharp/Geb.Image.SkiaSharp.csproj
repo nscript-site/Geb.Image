@@ -1,7 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>net7.0</TargetFramework>
+    <TargetFramework>net6.0</TargetFramework>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
     <PackageId>Geb.Image.Skia</PackageId>
@@ -16,10 +16,6 @@
   <ItemGroup>
     <PackageReference Include="BitMiracle.LibTiff.NET" Version="2.4.649" />
     <PackageReference Include="SkiaSharp" Version="2.88.7" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <ProjectReference Include="..\Geb.Image\Geb.Image.csproj" />
   </ItemGroup>
 
 </Project>

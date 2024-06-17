@@ -1,13 +1,11 @@
-NScript 图像库
+Geb.Image 图像库
 ========
 
-本项目初始为 [GebImage](https://github.com/xiaotie/GebImage), 已迁移为 [NScript.Image](https://github.com/nscript-site/NScript.Image)。
-
-代码中，Geb.Image 为旧代码。NScript.Image 中是基于 .Net7 新特性重写的版本。
+本项目初始为 [GebImage](https://github.com/xiaotie/GebImage), 为了方便维护，现迁移至这里。
 
 ## 简介
 
-Geb.Image 是一款为图像分析目的而构建的易用、高性能的 C# 图像库。图像、视频这样的数据占人类数据总量的绝大部分，自 2008 年转型图像和视频开发时起，我就在找寻一个开发语言，能够高效的处理图像和视频数据，同时又具有高开发速度。经过多方比对，最终选择了 C#。C# 是一个成熟的快速开发语言，而打开 unsafe 后，可以直接用指针操作内存数据，能够实现接近于 C 语言的性能。Geb.Image 是我的一个尝试。
+Geb.Image 是一款为图像分析、图像AI目的而构建的易用、高性能的 C# 图像库。图像、视频这样的数据占人类数据总量的绝大部分，自 2008 年转型图像和视频开发时起，我就在找寻一个开发语言，能够高效的处理图像和视频数据，同时又具有高开发速度。经过多方比对，最终选择了 C#。C# 是一个成熟的快速开发语言，而打开 unsafe 后，可以直接用指针操作内存数据，能够实现接近于 C 语言的性能。
 
 本项目有以下特色：
 
@@ -29,15 +27,11 @@ Geb.Image 是一款为图像分析目的而构建的易用、高性能的 C# 图
 
 项目内容
 
-- Geb.Image: 基础图像处理库，不依赖于第三方 cpp 库，支持 AOT 操作
-- Geb.Image.Analysis: 基础图像分析算法，不依赖于第三方 cpp 库，支持 AOT 操作
-- Geb.Image.Edit: 基础图像编辑库，不依赖于第三方 cpp 库，支持 AOT 操作
-- Geb.Image.Skia: 与 SkiaSharp 的桥接库。进行复杂的2D图像处理操作时，可结合该库使用。
-- Geb.Image.OpenCV: 与 OpenCVSharp 的桥接库
-- Geb.Media.IO: 提供与 FFmpeg 的桥接库，方便处理视频文件。未在本项目里维护。
-
-
-[项目更新日志](doc/Release.md)
+- Geb.Image: 基础图像处理库，不依赖于第三方 cpp 库，支持 AOT 操作。[![Geb.Image](https://img.shields.io/nuget/v/Geb.Image.svg?color=red&style=flat-square)](https://www.nuget.org/packages/Geb.Image/)
+- Geb.Image.Analysis: 基础图像分析算法，不依赖于第三方 cpp 库，支持 AOT 操作。
+- Geb.Image.Edit: 基础图像编辑库，不依赖于第三方 cpp 库，支持 AOT 操作。
+- Geb.Image.Skia: 与 SkiaSharp 的桥接库。进行复杂的2D图像处理操作时，可结合该库使用。[![Geb.Image.Skia](https://img.shields.io/nuget/v/Geb.Image.Skia.svg?color=red&style=flat-square)](https://www.nuget.org/packages/Geb.Image.Skia/)
+- Geb.Image.OpenCV: 与 OpenCVSharp 的桥接库。
 
 ## 图像读写
 
@@ -70,7 +64,7 @@ var im2 = ImageBgra32.Read(@"./img/demo-bmp-24.bmp");
 
 待写
 
-## 深度学习相关图像处理方法
+## 深度学习相关方法
 
 ### 凸包相关算法
 
@@ -90,4 +84,12 @@ public static unsafe RotatedRectF MinAreaRect(PointF[] points, bool isClockwiseC
 {
     ...
 }
+```
+
+### 获取 RotatedRectF 区域部分得图像
+
+```csharp
+var image = new ImageBgr24(1728, 1296);
+RotatedRectF rect = new RotatedRectF(new PointF(1043.05322f, 1003.94385f), new SizeF(717.3058f, 1332.83447f), -3.65722656f);
+var imgClip = image[rect];
 ```
