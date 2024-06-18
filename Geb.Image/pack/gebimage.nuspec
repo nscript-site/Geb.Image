@@ -2,7 +2,7 @@
 <package xmlns="http://schemas.microsoft.com/packaging/2010/07/nuspec.xsd">
     <metadata>
         <id>Geb.Image</id>
-        <version>6.1.0</version>
+        <version>6.1.1</version>
         <title>Geb Image Library</title>
         <authors>hufei(geblab)</authors>
         <readme>docs\README.md</readme>
@@ -21,8 +21,5 @@
         <file src="..\bin\Release\net6.0\Geb.Image.dll" target="lib\net6.0" />
         <file src="..\bin\Release\net6.0\Geb.Image.xml" target="lib\net6.0" />
         <file src="..\bin\Release\net6.0\Geb.Image.pdb" target="lib\net6.0" />
-        <file src="..\bin\Release\net6.0\Geb.Image.Transforms.dll" target="lib\net6.0" />
-        <file src="..\bin\Release\net6.0\Geb.Image.Transforms.xml" target="lib\net6.0" />
-        <file src="..\bin\Release\net6.0\Geb.Image.Transforms.pdb" target="lib\net6.0" />
     </files>
 </package>
